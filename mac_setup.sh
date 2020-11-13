@@ -62,7 +62,7 @@ fish -c 'fisher install 0rax/fish-bd'
 # brew install
 ###########
 echo -e "\nbrew install"
-brew_install_list=("git" "rmtrash" "nkf" "tree" "wget" "anyenv" "direnv" "peco" "tmux")
+brew_install_list=("git" "rmtrash" "nkf" "tree" "wget" "anyenv" "direnv" "peco" "tmux" "vim" "zlib")
 for item in ${brew_install_list[@]}; do
 	if type $item >/dev/null 2>&1; then
 		echo -e "-> ✅ $item was already exist"
@@ -84,4 +84,39 @@ if type "nvim" >/dev/null 2>&1; then
 else
 	echo -e "-> ❌ neovim was not exist"
 	brew install neovim
+fi
+
+###########
+# neo-vim
+###########
+echo -e "\nneovimの設定"
+if [ -d ~/.config/nvim ]; then
+	echo -e "-> ✅ directry ~/.config/nvim was already exist\n"
+else
+	mkdir -p ~/.config/nvim
+fi
+ln -nfs ~/dotfiles/init.vim ~/.config/nvim/init.vim
+
+###########
+# anyenv
+###########
+echo -e "\nanyenvの設定"
+anyenv install --init
+envs=("rbenv" "nodenv" "pyenv" "jenv")
+for env in ${envs[@]}
+do
+	echo -e "Is $env exists?"
+	if type $env >/dev/null 2>&1; then
+		echo -e "-> ✅ $env was already exist\n"
+	else
+		anyenv install $env
+	fi
+done
+
+##pyenv virtual-env
+if [ -e ~/.anyenv/envs/pyenv/plugins/pyenv-virtualenv ]
+then
+	echo "pyenv-virtualenv has been existed"
+else
+	git clone https://github.com/pyenv/pyenv-virtualenv.git ~/.anyenv/envs/pyenv/plugins/pyenv-virtualenv
 fi

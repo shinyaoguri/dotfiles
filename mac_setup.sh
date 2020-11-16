@@ -25,48 +25,53 @@ else
 fi
 
 ###########
-# fish
+# SSH
 ###########
-echo -e "\nfish-shellの設定"
-if type "fish" >/dev/null 2>&1; then
-	echo -e "-> ✅ fish-shell was already exist"
+echo -e "\nSSHの設定確認"
+if [ -d ~/.ssh ]; then
+	echo -e "-> ✅ .ssh directry was already exist"
+	if [ -e ~/.ssh/id_rsa.pub ]; then
+		echo -e "-> ✅ .ssh/id_rsa.pub was already exist"
+	else
+		echo -e "-> ❌ .ssh/id_ras.pub was not exist\n-> Please setup SSH\n"
+		return 2> /dev/null
+		exit
+	fi
 else
-	brew install fish
+	echo -e "-> ❌ .ssh was not exist\n-> Please setup SSH\n"
+	return 2> /dev/null
+	exit
 fi
 
-if [ -d ~/.config/fish ]; then
-	echo -e "-> ✅ directry ~/.config/fish was already exist"
-else
-    echo -e "-> ❌ directry ~/.config/fish was not exist"
-	mkdir -p ~/.config/fish
-fi
-ln -nfs ~/dotfiles/config.fish ~/.config/fish/config.fish
-ln -nfs ~/dotfiles/.zshrc ~/.zshrc
-
 ###########
-# fisherman
+# Git
 ###########
-if [ -e ~/.config/fish/functions/fisher.fish ]; then
-  echo -e "-> ✅ fisherman was already exist"
+echo -e "\nGitの設定"
+if type "git" >/dev/null 2>&1; then
+	echo -e "-> ✅ git was already exist"
 else
-  echo -e "-> ❌ fisherman was not exist"
-  curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher
-  fish -c 'fisher -v'
+	echo -e "-> ❌ git was not exist"
+	brew install git
 fi
 
-# plugins
-if [ "$(fish -c 'fisher list | grep fish-bd')" ]; then
-	echo -e "-> ✅ fisher plugin [0rax/fish-bd] was already exist"
+###########
+# dotfiles
+###########
+echo -e "\ndotfilesのダウンロード"
+if [ -d ~/dotfiles ]; then
+	echo -e "-> ✅ dotfiles was already exist"
+	cd ~/dotfiles
 else
-	echo -e "-> ❌ fisher plugin [0rax/fish-bd] was not exist"
-	fish -c 'fisher install 0rax/fish-bd'
+	echo -e "-> ❌ dotfiles was not exist"
+	git clone git@github.com:shinyaoguri/dotfiles.git ~/dotfiles
+	cd ~/dotfiles
 fi
 
 ###########
 # brew install
 ###########
 echo -e "\nbrew install"
-brew_install_list=("git" "rmtrash" "nkf" "tree" "wget" "direnv" "peco" "tmux" "vim")
+brew_install_list=("rmtrash" "nkf" "tree" "wget" "direnv" "peco" "tmux" "vim")
 for item in ${brew_install_list[@]}; do
 	if type $item >/dev/null 2>&1; then
 		echo -e "-> ✅ $item was already exist"
@@ -110,7 +115,6 @@ else
 fi
 if [ -e /Library/Java/JavaVirtualMachines/openjdk.jdk ]; then
 	echo -e "-> ✅ JAVA_HOME was already exist"
-	java --version
 else
 	echo -e "-> ❌ JAVA_HOME symboliclink was not exist"
 	sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
@@ -131,14 +135,50 @@ else
 	echo -e "-> ❌ dart was not exist"
 	brew tap dart-lang/dart
 	brew install dart
-fi	
+fi
+
+###########
+# fish
+###########
+echo -e "\nfish-shellの設定"
+if type "fish" >/dev/null 2>&1; then
+	echo -e "-> ✅ fish-shell was already exist"
+else
+	brew install fish
+fi
+
+if [ -d ~/.config/fish ]; then
+	echo -e "-> ✅ directry ~/.config/fish was already exist"
+else
+    echo -e "-> ❌ directry ~/.config/fish was not exist"
+	mkdir -p ~/.config/fish
+fi
+ln -nfs ~/dotfiles/config.fish ~/.config/fish/config.fish
+ln -nfs ~/dotfiles/.zshrc ~/.zshrc
+
+# fisherman
+if [ -e ~/.config/fish/functions/fisher.fish ]; then
+  echo -e "-> ✅ fisherman was already exist"
+else
+  echo -e "-> ❌ fisherman was not exist"
+  curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher
+  fish -c 'fisher -v'
+fi
+
+# plugins
+if [ "$(fish -c 'fisher list | grep fish-bd')" ]; then
+	echo -e "-> ✅ fisher plugin [0rax/fish-bd] was already exist"
+else
+	echo -e "-> ❌ fisher plugin [0rax/fish-bd] was not exist"
+	fish -c 'fisher install 0rax/fish-bd'
+fi
 
 ###########
 # neo-vim
 ###########
 echo -e "\nneovimの設定"
 if [ -d ~/.config/nvim ]; then
-	echo -e "-> ✅ directry ~/.config/nvim was already exist"
+	echo -e "-> ✅ ~/.config/nvim was already exist"
 else
 	mkdir -p ~/.config/nvim
 fi
@@ -171,10 +211,16 @@ fi
 ###########
 echo -e "\nbrew cask install"
 # LaTeX
-if [ $(brew list --cask | grep mactex-no-gui) ]; then
-	echo -e "-> ✅ MacTeX(no gui) was already exist"
+read -n1 -p "Do you want to install MacTeX? (y/N): " yn
+if [[ $yn = [yY] ]]; then
+	if [ $(brew list --cask | grep mactex-no-gui) ]; then
+		echo -e "\n-> ✅ MacTeX(no gui) was already exist"
+	else
+		echo -e "\n-> ❌ MacTeX(no gui) was not exist"
+		brew cask install mactex-no-gui
+	fi
 else
-	echo -e "-> ❌ MacTeX(no gui) was not exist"
-	brew cask install mactex-no-gui
+  echo -e "\n-> MacTeX will not be installed"
 fi
 
+echo -e "\nDone\n"

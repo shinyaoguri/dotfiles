@@ -27,7 +27,7 @@ fi
 ###########
 # fish
 ###########
-echo -e "\nfish-shellの存在確認"
+echo -e "\nfish-shellの設定"
 if type "fish" >/dev/null 2>&1; then
 	echo -e "-> ✅ fish-shell was already exist"
 else
@@ -55,14 +55,18 @@ else
 fi
 
 # plugins
-fish -c 'fisher install 0rax/fish-bd'
-
+if [ "$(fish -c 'fisher list | grep fish-bd')" ]; then
+	echo -e "-> ✅ fisher plugin [0rax/fish-bd] was already exist"
+else
+	echo -e "-> ❌ fisher plugin [0rax/fish-bd] was not exist"
+	fish -c 'fisher install 0rax/fish-bd'
+fi
 
 ###########
 # brew install
 ###########
 echo -e "\nbrew install"
-brew_install_list=("git" "rmtrash" "nkf" "tree" "wget" "anyenv" "direnv" "peco" "tmux" "vim" "zlib")
+brew_install_list=("git" "rmtrash" "nkf" "tree" "wget" "direnv" "peco" "tmux" "vim")
 for item in ${brew_install_list[@]}; do
 	if type $item >/dev/null 2>&1; then
 		echo -e "-> ✅ $item was already exist"
@@ -72,6 +76,16 @@ for item in ${brew_install_list[@]}; do
 	fi		
 done
 
+# anyenv
+if type "anyenv" >/dev/null 2>&1; then
+	echo -e "-> ✅ anyenv was already exist"
+else
+	echo -e "-> ❌ anyenv was not exist"
+	brew install anyenv
+	anyenv install --init
+fi
+
+# imagemagick
 if type "convert" >/dev/null 2>&1; then
 	echo -e "-> ✅ imagemagick was already exist"
 else
@@ -79,6 +93,7 @@ else
 	brew install imagemagick
 fi
 
+# Neovim
 if type "nvim" >/dev/null 2>&1; then
 	echo -e "-> ✅ neovim was already exist"
 else
@@ -86,12 +101,44 @@ else
 	brew install neovim
 fi
 
+# Java
+if type "java" >/dev/null 2>&1; then
+	echo -e "-> ✅ java was already exist"
+else
+	echo -e "-> ❌ java was not exist"
+	brew install openjdk
+fi
+if [ -e /Library/Java/JavaVirtualMachines/openjdk.jdk ]; then
+	echo -e "-> ✅ JAVA_HOME was already exist"
+	java --version
+else
+	echo -e "-> ❌ JAVA_HOME symboliclink was not exist"
+	sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
+fi
+
+# zlib
+if [ $(brew list --formula | grep zlib) ]; then
+	echo -e "-> ✅ zlib has been exist"
+else
+	echo -e "-> ❌ zlib was not exist"
+	brew install zlib
+fi
+
+# Dart
+if type "dart" >/dev/null 2>&1; then
+	echo -e "-> ✅ dart was already exist"
+else
+	echo -e "-> ❌ dart was not exist"
+	brew tap dart-lang/dart
+	brew install dart
+fi	
+
 ###########
 # neo-vim
 ###########
 echo -e "\nneovimの設定"
 if [ -d ~/.config/nvim ]; then
-	echo -e "-> ✅ directry ~/.config/nvim was already exist\n"
+	echo -e "-> ✅ directry ~/.config/nvim was already exist"
 else
 	mkdir -p ~/.config/nvim
 fi
@@ -101,22 +148,33 @@ ln -nfs ~/dotfiles/init.vim ~/.config/nvim/init.vim
 # anyenv
 ###########
 echo -e "\nanyenvの設定"
-anyenv install --init
 envs=("rbenv" "nodenv" "pyenv" "jenv")
 for env in ${envs[@]}
 do
-	echo -e "Is $env exists?"
 	if type $env >/dev/null 2>&1; then
-		echo -e "-> ✅ $env was already exist\n"
+		echo -e "-> ✅ $env was already exist"
 	else
 		anyenv install $env
 	fi
 done
-
-##pyenv virtual-env
-if [ -e ~/.anyenv/envs/pyenv/plugins/pyenv-virtualenv ]
-then
-	echo "pyenv-virtualenv has been existed"
+#pyenv virtual-env
+if [ -e ~/.anyenv/envs/pyenv/plugins/pyenv-virtualenv ]; then
+	echo "-> ✅ pyenv-virtualenv was already existed"
 else
+	echo "-> ❌ pyenv-virtualenv was not existed"
 	git clone https://github.com/pyenv/pyenv-virtualenv.git ~/.anyenv/envs/pyenv/plugins/pyenv-virtualenv
 fi
+
+
+###########
+# brew cask
+###########
+echo -e "\nbrew cask install"
+# LaTeX
+if [ $(brew list --cask | grep mactex-no-gui) ]; then
+	echo -e "-> ✅ MacTeX(no gui) was already exist"
+else
+	echo -e "-> ❌ MacTeX(no gui) was not exist"
+	brew cask install mactex-no-gui
+fi
+

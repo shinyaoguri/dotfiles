@@ -21,13 +21,16 @@ end
 ## direnv
 eval (direnv hook fish)
 
+## Flutter
+set -x PATH $HOME/.local/flutter/bin $PATH
+
 #エイリアス
 alias rmt="rmtrash"
 alias rm="rm -i"
+alias g="git"
 alias relogin="exec fish"
 alias reload="source ~/.config/fish/config.fish"
 alias t="tmuximum"
-
 clear
 
 #Theme

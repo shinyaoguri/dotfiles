@@ -138,6 +138,18 @@ else
 fi
 
 ###########
+# CocoaPods
+###########
+if type "pod" >/dev/null 2>&1; then
+	echo -e "-> ✅ CocoaPods was already exist"
+else
+	echo -e "-> ❌ CocoaPods was not exist"
+	sudo gem install cocoapods
+	pod setup
+fi
+
+
+###########
 # fish
 ###########
 echo -e "\nfish-shellの設定"
@@ -211,16 +223,35 @@ fi
 ###########
 echo -e "\nbrew cask install"
 # LaTeX
-read -n1 -p "Do you want to install MacTeX? (y/N): " yn
-if [[ $yn = [yY] ]]; then
-	if [ $(brew list --cask | grep mactex-no-gui) ]; then
-		echo -e "\n-> ✅ MacTeX(no gui) was already exist"
-	else
-		echo -e "\n-> ❌ MacTeX(no gui) was not exist"
-		brew cask install mactex-no-gui
-	fi
-else
-  echo -e "\n-> MacTeX will not be installed"
-fi
+read -p "Do you want to install MacTeX? (y/N): " yn
+case "$yn" in
+  [yY]*)
+		if [ $(brew list --cask | grep mactex-no-gui) ]; then
+			echo -e "\n-> ✅ MacTeX(no gui) was already exist"
+		else
+			echo -e "\n-> ❌ MacTeX(no gui) was not exist"
+			brew cask install mactex-no-gui
+		fi
+		;;
+  *)
+		echo -e "\n-> MacTeX will not be installed"
+  ;;
+esac
+# Virtualbox
+read -p "Do you want to install VirtualBox? (y/N): " yn
+case "$yn" in
+  [yY]*)
+		if type "VirtualBox" >/dev/null 2>&1; then
+			echo -e "\n-> ✅ VirtualBox was already exist"
+		else
+			echo -e "\n-> ❌ VirtualBox was not exist"
+			brew cask install virtualbox
+		fi
+		;;
+  *)
+		echo -e "\n-> VirtualBox will not be installed"
+  ;;
+esac
+
 
 echo -e "\nDone\n"

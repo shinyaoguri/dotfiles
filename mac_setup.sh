@@ -196,6 +196,7 @@ if [ -d ~/.config/nvim ]; then
 else
 	mkdir -p ~/.config/nvim
 fi
+ln -nfs ~/dotfiles/.vimrc ~/.vimrc
 ln -nfs ~/dotfiles/init.vim ~/.config/nvim/init.vim
 
 ###########
@@ -245,6 +246,21 @@ case "$yn" in
 		;;
   *)
 		echo -e "\n-> VirtualBox will not be installed"
+  ;;
+esac
+# Chromedriver
+read -p "Do you want to install Chromedriver? (y/N): " yn
+case "$yn" in
+  [yY]*)
+		if type "chromedriver" >/dev/null 2>&1; then
+			echo -e "\n-> ✅ Chromedriver was already exist"
+		else
+			echo -e "\n-> ❌ Chromedriver was not exist"
+			brew cask install chromedriver
+		fi
+		;;
+  *)
+		echo -e "\n-> Chromedriver will not be installed"
   ;;
 esac
 

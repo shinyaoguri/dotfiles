@@ -28,6 +28,9 @@ eval (direnv hook fish)
 ## Flutter
 set -x PATH $HOME/.local/flutter/bin $PATH
 
+## tmux
+eval (tmux)
+
 #エイリアス
 alias rmt="rmtrash"
 alias rm="rm -i"

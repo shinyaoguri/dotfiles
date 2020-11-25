@@ -194,6 +194,7 @@ if [ -d ~/.config/nvim ]; then
 else
 	mkdir -p ~/.config/nvim
 fi
+ln -nfs ~/dotfiles/.vimrc ~/.vimrc
 ln -nfs ~/dotfiles/init.vim ~/.config/nvim/init.vim
 
 ###########

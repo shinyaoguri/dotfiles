@@ -39,6 +39,7 @@ if [ -d ~/.ssh ]; then
 	fi
 else
 	echo -e "-> ❌ .ssh was not exist\n-> Please setup SSH\n"
+	echo -e "-> Please add your id_rsa.pub file to GitHub\n"
 	return 2> /dev/null
 	exit
 fi
@@ -113,6 +114,7 @@ else
 	echo -e "-> ❌ java was not exist"
 	brew install openjdk
 fi
+# TODO Javaが存在する場合の条件を追加する
 if [ -e /Library/Java/JavaVirtualMachines/openjdk.jdk ]; then
 	echo -e "-> ✅ JAVA_HOME was already exist"
 else
@@ -209,13 +211,6 @@ do
 		anyenv install $env
 	fi
 done
-#pyenv virtual-env
-if [ -e ~/.anyenv/envs/pyenv/plugins/pyenv-virtualenv ]; then
-	echo "-> ✅ pyenv-virtualenv was already existed"
-else
-	echo "-> ❌ pyenv-virtualenv was not existed"
-	git clone https://github.com/pyenv/pyenv-virtualenv.git ~/.anyenv/envs/pyenv/plugins/pyenv-virtualenv
-fi
 
 
 ###########

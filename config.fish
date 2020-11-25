@@ -8,6 +8,10 @@ set -x PKG_CONFIG_PATH /usr/local/opt/openblas/lib/pkgconfig
 
 set -x HOMEBREW_GITHUB_API_TOKEN 719c1f1fcfe30d2034b5ec6e8d1713c6cd271fb3
 
+# M1チップのMacの場合のHomebrewの設定
+set -x PATH /opt/homebrew/bin $PATH
+set -x PATH /usr/local/bin $PATH
+
 
 ###########
 ## anyenv

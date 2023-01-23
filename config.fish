@@ -19,6 +19,8 @@ if test -d $HOME/.anyenv
   anyenv init - fish | source
 end
 
+set -x PATH $HOME/Library/Android/sdk/platform-tools $PATH
+
 # Fish git prompt
 set __fish_git_prompt_showdirtystate 'yes'
 set __fish_git_prompt_showstashstate 'yes'

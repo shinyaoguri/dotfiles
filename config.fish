@@ -19,6 +19,7 @@ if test -d $HOME/.anyenv
   anyenv init - fish | source
 end
 
+# Android Studio
 set -x PATH $HOME/Library/Android/sdk/platform-tools $PATH
 
 # Fish git prompt

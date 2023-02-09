@@ -2,6 +2,11 @@
 set -x PATH /opt/homebrew/bin $PATH
 set -x PATH /usr/local/bin $PATH
 
+# deno lume
+if test -d $HOME/.deno
+  set -x PATH ~/.deno/bin $PATH
+end
+
 #エイリアス
 alias rmt="trash -F"
 alias rm="rm -i"
@@ -14,7 +19,6 @@ clear
 
 # anyenv
 if test -d $HOME/.anyenv
-  #anyenv
   set -x PATH $HOME/.anyenv/bin $PATH
   anyenv init - fish | source
 end

@@ -2,6 +2,14 @@
 set -x PATH /opt/homebrew/bin $PATH
 set -x PATH /usr/local/bin $PATH
 
+# NDI SDK のライブラリパスを設定
+set -Ux DYLD_LIBRARY_PATH "/Library/NDI SDK for Apple/lib"
+# NDI SDK の実行ファイルへのパスを追加
+set -Ux PATH $PATH "/Library/NDI SDK for Apple/bin"
+set -Ux CPATH "/Library/NDI SDK for Apple/include"
+set -Ux LIBRARY_PATH "/Library/NDI SDK for Apple/lib"
+
+
 ##########
 # エイリアス
 ##########
@@ -59,3 +67,4 @@ set __fish_git_prompt_char_untrackedfiles '☡'
 set __fish_git_prompt_char_stashstate '↩'
 set __fish_git_prompt_char_upstream_ahead '+'
 set __fish_git_prompt_char_upstream_behind '-'
+set -gx GPG_TTY (tty)
